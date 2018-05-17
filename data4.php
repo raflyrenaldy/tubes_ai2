@@ -1,3 +1,20 @@
+<?php
+
+// Open Connection
+$con = @mysqli_connect('localhost', 'root', '', 'db_ai');
+
+if (!$con) {
+    echo "Error: " . mysqli_connect_error();
+    exit();
+}
+
+// Some Query
+
+
+// Close connection
+
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -351,27 +368,27 @@
                 </span>
             </header>
             <?php
-            $dor=fopen('models/tes.csv','r');
-            $der=fopen('models/tes2.csv','r');
-            $sama=1;
-            $persen=1;
-            $tot;
-            if (($jaja = fopen("models/tes.csv", "r")) !== FALSE) {
-    $rowss=1;
-    while (($jajaja = fgetcsv($dor, 150000, ",")) && ($brajajaj = fgetcsv($der,150000,",")) !== FALSE) {
-        $persen++;
-                if($jajaja[14] == $brajajaj[14]){
-                    $sama++;
-                }
+           $count = 0;
+            $persen = 0;
+            $query21 = mysqli_query($con,'SELECT income FROM SAMPLE3');
+            $query22 = mysqli_query($con,'SELECT income FROM SAMPLEPERCOBAAN');
+           while ( $data2 = mysqli_fetch_array($query22)){
+            $data1 = mysqli_fetch_array($query21);
+                $persen++;
+            $d1 = $data1['income'];
+
+            $d2 = $data2['income'];
+            
+            if( $d1 == $d2){
+            $count++;   
+
             }
-                }
-    $tot = $sama/$persen*100;
-fclose($dor);
-fclose($der);
-             ?>
+             
+        }$tot = $count/$persen*100;
+             ?> 
             <div class="panel-body">
-                <p>Data Yang Sama</p>
-                <p><?php echo $sama ?></p>
+                 <p>Data Yang Sama</p>
+                <p><?php echo $count ?></p>
                 <p>Persentase Akurat</p>
                 <p><?php echo $tot ?>%</p>
             </div>
@@ -394,8 +411,7 @@ fclose($der);
         <thead>
         <tr>
                       <th>No</th>
-                    <th>Age</th>
-     
+                  
      
     <th>Ed num</th>
  
@@ -419,7 +435,7 @@ while ($row2 = mysqli_fetch_array($query1))
             
         <tr class="">
            <td><?php echo $rowss++?></td>
-           <td><?php echo $row2['Age']?></td>
+         
           
            <td><?php echo $row2['education_num']?></td>
         
@@ -485,7 +501,7 @@ while ($row2 = mysqli_fetch_array($query1))
                 
                 
                                   <?php
-$sql    = 'SELECT * FROM sample';
+$sql    = 'SELECT * FROM SAMPLEPERCOBAAN';
 $rows = 1;
 $query  = mysqli_query($con, $sql);
 while ($row = mysqli_fetch_array($query))
@@ -507,9 +523,8 @@ while ($row = mysqli_fetch_array($query))
            <td><?php echo $row['Income']?></td>
            </tr>
            
-       <?php
+    <?php
     } //end while
-
 ?>
                 
                 
@@ -599,3 +614,4 @@ while ($row = mysqli_fetch_array($query))
 
 </body>
 </html>
+<?php mysqli_close ($con); ?>

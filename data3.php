@@ -367,9 +367,15 @@ if (!$con) {
                 </span>
             </header>
             <div class="panel-body">
-                <p>Adding Collision.</p>
+                <p>Calculate Collision.</p>
                 <form action="models/addCollision.php" method="post">
+                
                 <button class="btn btn-success" type="submit" name="submit">Click Me!</button>
+                </form>
+                <p class="pull-right">Insert Collision. </p>
+                <form action="models/insertCollision.php" method="post">
+                
+                <button class="btn btn-success pull-right" type="submit" name="submit">Click Me!</button>
                 </form>
             </div>
         </section>
@@ -434,7 +440,7 @@ while ($row = mysqli_fetch_array($query))
 ?> 
      
        
-        </tr>
+       
         </tbody>
        
         </table>
