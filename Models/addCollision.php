@@ -520,7 +520,7 @@ if (!$con) {
     }
 }
 
-                echo "<script>window.location.href='../tes.php'</script>";
+                echo "<script>window.location.href='../tree.php'</script>";
     
 
           

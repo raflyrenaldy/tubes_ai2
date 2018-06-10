@@ -23,9 +23,9 @@ if (!$con) {
   <meta name="keywords" content="admin, dashboard, bootstrap, template, flat, modern, theme, responsive, fluid, retina, backend, html5, css, css3">
   <meta name="description" content="">
   <meta name="author" content="ThemeBucket">
-  <link rel="shortcut icon" href="images/logo-favicon.png" type="image/png">
+<link rel="shortcut icon" href="images/logo-favicon.png" type="image/png">
 
-  <title>Dashboard</title>
+  <title>Decision Tree</title>
 
   <!--icheck-->
   <link href="js/iCheck/skins/minimal/minimal.css" rel="stylesheet">
@@ -60,8 +60,9 @@ if (!$con) {
     <div class="left-side sticky-left-side">
 
         <!--logo and iconic logo start-->
+
         <div class="logo-icon text-center">
-            <a href="index.php"><img src="images/logo.png" alt="" width="80%" height="80%"></a>
+          <a href="index.php"><img src="images/logo.png" alt="" width="80%" height="80%"></a>
         </div>
         <!--logo and iconic logo end-->
 
@@ -72,7 +73,7 @@ if (!$con) {
 
             <!--sidebar nav start-->
            <ul class="nav nav-pills nav-stacked custom-nav">
-                <li class="active"><a href="index.php"><i class="fa fa-home"></i> <span>Dashboard</span></a></li>
+                <li ><a href="index.php"><i class="fa fa-home"></i> <span>Dashboard</span></a></li>
                 <li ><a href="data2.php"><i class="fa fa-book"></i> <span>Tambah Data</span></a>
                    
                 </li>
@@ -82,7 +83,7 @@ if (!$con) {
                 <li><a href="data4.php"><i class="fa fa-book"></i> <span>Hasil Data</span></a>
                    
                 </li>
-                <li><a href="tree.php"><i class="fa fa-sitemap"></i> <span>Decision Tree</span></a>
+                <li class="active"><a href="tree.php"><i class="fa fa-sitemap"></i> <span>Decision Tree</span></a>
                    
                 </li>
 
@@ -105,7 +106,7 @@ if (!$con) {
 
             <!--search start-->
            
-                <h4 class="">  Machine Learning with Decision Tree C.45</h4>
+                <h4 class="">Machine Learning with Decision Tree C.45</h4>
       
             <!--search end-->
 
@@ -117,13 +118,13 @@ if (!$con) {
         <!-- page heading start-->
         <div class="page-heading">
             <h3>
-                Dashboard
+                Decision Tree
             </h3>
             <ul class="breadcrumb">
                 <li>
                     <a href="#">Dashboard</a>
                 </li>
-                <li class="active"> My Dashboard </li>
+                <li class="active"> Decision Tree </li>
             </ul>
             <div class="state-info">
                 <section class="panel">
@@ -145,7 +146,7 @@ if (!$con) {
                 <div class="col-sm-12">
                 <section class="panel">
                 <header class="panel-heading">
-                    Tabel Data
+                    Decision Tree
                     <span class="tools pull-right">
                         <a href="javascript:;" class="fa fa-chevron-down"></a>
                         <a href="javascript:;" class="fa fa-times"></a>
@@ -156,55 +157,56 @@ if (!$con) {
                 <div class="clearfix">
                    
                 </div>
-                 <div class="space15"></div>
-                <table class="table table-striped table-hover table-bordered" id="editable-sample">
-                <thead>
-                <tr>
-    <th>No</th>
-    <th>Workclass</th>
-     <th>Education</th>
-    <th>Ed num</th>
-    <th>status</th>
-    <th>Occupation</th>
-    <th>Relationship</th>
-    <th>Race</th>
-    <th>Sex</th>
-       <th>Income</th>
-                </tr>
-                </thead>
-                <tbody>               
-                 <?php
-$sql    = 'SELECT * FROM adult';
-$rows = 1;
-$query  = mysqli_query($con, $sql);
-while ($row = mysqli_fetch_array($query))
-{
-    
-    
+                  <?php
+    $con = @mysqli_connect('localhost', 'root', '', 'db_ai');
 
-        ?>
-         <tr class="">
-           <td><?php echo $rows++?></td>
-           <td><?php echo $row['Workclass']?></td>
-           <td><?php echo $row['Education']?></td>
-           <td><?php echo $row['education_num']?></td>
-           <td><?php echo $row['marital_status']?></td>
-           <td><?php echo $row['Occupation']?></td>
-           <td><?php echo $row['Relationship']?></td>
-           <td><?php echo $row['Race']?></td>
-           <td><?php echo $row['Sex']?></td>
-           <td><?php echo $row['Income']?></td>
-           </tr>
-       <?php
-    } //end while
+if (!$con) {
+    echo "Error: " . mysqli_connect_error();
+    exit();
+}
+      echo "<h2>Pohon Keputusan Menggunakan Algoritma C45</h2>";
+    echo "<font face='Courier New' size='2'>";
+    generatePohonC45('0', 0);
+    echo "</font>";
     
 
 
-?>
-             
-               
-                </tbody>
-                </table>
+function generatePohonC45($idparent, $spasi){
+     $con = @mysqli_connect('localhost', 'root', '', 'db_ai');
+
+if (!$con) {
+    echo "Error: " . mysqli_connect_error();
+    exit();
+}
+    $result = mysqli_query($con,"select * from pohon_keputusan_c45 where id_parent= '$idparent'");
+    while($row=mysqli_fetch_row($result)){
+        for($i=1;$i<=$spasi;$i++){
+            echo "|&nbsp;&nbsp;";
+        }
+        
+        if ($row[6] === '>50k') {
+            $keputusan = "<font color=green>$row[6]</font>";
+        } elseif ($row[6] === '<=50k') {
+            $keputusan = "<font color=red>$row[6]</font>";
+        } elseif ($row[6] === '?') {
+            $keputusan = "<font color=blue>$row[6]</font>";
+        } else {
+            $keputusan = "<b>$row[6]</b>";
+        }
+        echo "<font color=red>$row[1]</font> = $row[2] (>50k = $row[4], <=50k= $row[5]) : <b>$keputusan</b><br>";
+
+        /*panggil dirinya sendiri*/
+        generatePohonC45($row[0], $spasi + 1);
+    }
+}
+    echo "<br><br>
+    <table>
+    <h2>Keterangan Hasil dari Pohon Keputusan:</h2><hr>
+    <tr><td width='80px;' style='color:green;'>>50K</td> <td>:</td><td>Pendapatan lebih dari 50.000</td></tr>
+    <tr><td style='color:red;'><=50K</td> <td>:</td><td>Pendapatan kurang dari sama dengan 50.000</td></tr>
+    </table>";
+  echo "<br><br><br><br><br>";
+    ?>
                 </div>
                 </div>
                 </section>
